@@ -17,6 +17,8 @@ Node *delete_at_tail(Node *);
 Node *delete_first_match(Node *, int delete_value, bool *was_deleted);
 Node *delete_all_matches(Node *, int delete_value, int *num_deleted);
 Node *efficient_delete_match(Node *, int delete_value, int *num_deleted);
+Node *append_list(Node *head1, Node *head2);
+Node *reverse_list(Node *head);
 size_t length(Node *);
 size_t recursive_length(Node *);
 bool is_member(Node *node, int value_to_find);
@@ -25,52 +27,21 @@ void replace_matches(Node *node, int find_value, int replace_value);
 
 int main()
 {
-    Node *list8 = NULL; /* an empty list */
-
-    list8 = insert_at_head(list8, 4);
-    list8 = insert_at_head(list8, 3);
-    list8 = insert_at_head(list8, 4);
-    list8 = insert_at_head(list8, 5);
-    list8 = insert_at_head(list8, 4);
-    list8 = insert_at_head(list8, 4);
-    list8 = insert_at_head(list8, 7);
-    list8 = insert_at_head(list8, 4);
-    list8 = insert_at_head(list8, 4);
-
-    printf("List before delete...\n");
-    print_list(list8);
-    int num_deleted = 0;
-    list8 = efficient_delete_match(list8, 4, &num_deleted);
-    printf("\nList after delete...\n");
-    print_list(list8);
-    printf("Numbers of elements deleted: %d\n", num_deleted);
-
-    Node *list9 = NULL, *list10 = NULL;
-    for (int i = 0; i < 500000; i++)
-        list9 = insert_at_head(list9, i % 10);
-
-    for (int i = 0; i < 500000; i++)
-        list10 = insert_at_head(list10, i % 10);
-
-    clock_t tic, toc;
-    tic = clock();
-    list9 = delete_all_matches(list9, 4, &num_deleted);
-    toc = clock();
-    printf("delete_all_matches: %fs\n", (double)(toc - tic) / CLOCKS_PER_SEC);
-    printf("elements deleted: %d\n", num_deleted);
-
-    tic = clock();
-    list10 = efficient_delete_match(list10, 4, &num_deleted);
-    toc = clock();
-    printf("efficient_delete_all_matches: %fs\n", (double)(toc - tic) / CLOCKS_PER_SEC);
-    printf("elements deleted: %d\n", num_deleted);
-
-    /*
-    delete_all_matches: 21.178000s -> too long!
-    elements deleted: 50000
-    efficient_delete_all_matches: 0.002000s -> faster than an eye blink
-    elements deleted: 50000
-    */
+    Node *list1 = NULL, *list2 = NULL;
+    for (int i = 1; i <= 3; i++)
+        list1 = insert_at_tail(list1, i);
+    for (int i = 4; i <= 10; i++)
+        list2 = insert_at_tail(list2, i);
+    printf("List 1: \n");
+    print_list(list1);
+    printf("List 2: \n");
+    print_list(list2);
+    list1 = append_list(list1, list2);
+    printf("List 1 updated: \n");
+    print_list(list1);
+    printf("List 1 reversed: \n");
+    list1 = reverse_list(list1);
+    print_list(list1);
 }
 
 void print_list(Node *head)
@@ -229,6 +200,41 @@ Node *delete_first_match(Node *head, int delete_value, bool *was_deleted)
 
     *was_deleted = false;
     return head;
+}
+
+Node *append_list(Node *head1, Node *head2)
+{
+    if (head1 == NULL)
+        return head2;
+
+    Node *current = head1;
+    while (current->next != NULL)
+        current = current->next;
+    current->next = head2;
+    return head1;
+}
+
+Node *reverse_list(Node *head)
+{
+    if (head == NULL)
+        return NULL;
+    if (head->next == NULL)
+        return head;
+
+    Node *current = head;
+    Node *next_node = head->next;
+
+    current->next = NULL;
+
+    while (next_node != NULL)
+    {
+        Node *temp = next_node->next;
+        next_node->next = current;
+        current = next_node;
+        next_node = temp;
+    }
+
+    return current;
 }
 
 size_t length(Node *head)
