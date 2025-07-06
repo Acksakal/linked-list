@@ -27,29 +27,27 @@ void replace_matches(Node *node, int find_value, int replace_value);
 void sort_list(Node *head);
 void sort_list_inef(Node *head);
 void remove_duplicates(Node *head);
+Node *insert_after(Node *, int, int);
+Node *delete_list(Node *node);
+void sum_lists(Node *node1, Node *node2);
+Node *duplicate_list(Node *);
+Node *merge_lists(Node *node1, Node *node2);
 
 int main()
 {
-    Node *list4 = NULL;
-    list4 = insert_at_head(list4, 5);
-    list4 = insert_at_head(list4, 5);
-    list4 = insert_at_head(list4, 6);
-    list4 = insert_at_head(list4, 7);
-    list4 = insert_at_head(list4, 5);
-    list4 = insert_at_head(list4, 8);
-    list4 = insert_at_head(list4, 1);
-    list4 = insert_at_head(list4, 6);
-    list4 = insert_at_head(list4, 2);
-    list4 = insert_at_head(list4, 8);
-    list4 = insert_at_head(list4, 9);
-    list4 = insert_at_head(list4, 7);
-    list4 = insert_at_head(list4, 2);
-    list4 = insert_at_head(list4, 6);
-    puts("Before");
-    print_list(list4);
-    remove_duplicates(list4);
-    puts("After");
-    print_list(list4);
+    Node *list1 = NULL, *list2 = NULL;
+    list1 = insert_at_head(list1, 1);
+    list1 = insert_at_tail(list1, 10);
+    list1 = insert_at_head(list1, 21);
+    list1 = insert_at_tail(list1, 13);
+    list1 = insert_at_head(list1, 14);
+    list1 = insert_at_tail(list1, 61);
+    print_list(list1);
+    list2 = duplicate_list(list1);
+    puts("");
+    print_list(list2);
+
+    return 0;
 }
 
 void print_list(Node *head)
@@ -387,5 +385,75 @@ void remove_duplicates(Node *head)
             }
         }
         current1 = current1->next;
+    }
+}
+
+Node *insert_after(Node *head, int new_value, int after_value)
+{
+    Node *new_node = calloc(1, sizeof(Node));
+    new_node->value = new_value;
+
+    if (head == NULL)
+        return new_node;
+    else
+    {
+        Node *current = head;
+        while (current->next != NULL)
+        {
+            if (current->value == after_value)
+            {
+                new_node->next = current->next;
+                current->next = new_node;
+                return head;
+            }
+            else
+                current = current->next;
+        }
+
+        /* If no value is found append the new_node to the tail */
+        new_node->next = current->next;
+        current->next = new_node;
+        return head;
+    }
+}
+
+Node *delete_list(Node *node)
+{
+    if (node != NULL)
+    {
+        delete_list(node->next);
+        free(node);
+    }
+    return NULL;
+}
+
+void sum_lists(Node *list1, Node *list2)
+{
+    if (list1 == NULL || list2 == NULL) return;
+    list1->value += list2->value;
+    sum_lists(list1->next, list2->next);
+}
+
+Node *duplicate_list(Node *node)
+{
+    if (node == NULL)
+        return NULL;
+
+    Node *new_node = calloc(1, sizeof(Node));
+    new_node->value = node->value;
+    
+    new_node->next = duplicate_list(node->next);
+    return new_node;
+}
+
+Node *merge_lists(Node *node1, Node *node2)
+{
+    if (node1 == NULL && node2 == NULL)
+        return NULL;
+
+    while (node1 != NULL && node2 != NULL)
+    {
+        if (node1->value < node2->value)
+            node1->next = node2;
     }
 }
