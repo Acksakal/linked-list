@@ -24,24 +24,32 @@ size_t recursive_length(Node *);
 bool is_member(Node *node, int value_to_find);
 int count_matches(Node *node, int value_to_find);
 void replace_matches(Node *node, int find_value, int replace_value);
+void sort_list(Node *head);
+void sort_list_inef(Node *head);
+void remove_duplicates(Node *head);
 
 int main()
 {
-    Node *list1 = NULL, *list2 = NULL;
-    for (int i = 1; i <= 3; i++)
-        list1 = insert_at_tail(list1, i);
-    for (int i = 4; i <= 10; i++)
-        list2 = insert_at_tail(list2, i);
-    printf("List 1: \n");
-    print_list(list1);
-    printf("List 2: \n");
-    print_list(list2);
-    list1 = append_list(list1, list2);
-    printf("List 1 updated: \n");
-    print_list(list1);
-    printf("List 1 reversed: \n");
-    list1 = reverse_list(list1);
-    print_list(list1);
+    Node *list4 = NULL;
+    list4 = insert_at_head(list4, 5);
+    list4 = insert_at_head(list4, 5);
+    list4 = insert_at_head(list4, 6);
+    list4 = insert_at_head(list4, 7);
+    list4 = insert_at_head(list4, 5);
+    list4 = insert_at_head(list4, 8);
+    list4 = insert_at_head(list4, 1);
+    list4 = insert_at_head(list4, 6);
+    list4 = insert_at_head(list4, 2);
+    list4 = insert_at_head(list4, 8);
+    list4 = insert_at_head(list4, 9);
+    list4 = insert_at_head(list4, 7);
+    list4 = insert_at_head(list4, 2);
+    list4 = insert_at_head(list4, 6);
+    puts("Before");
+    print_list(list4);
+    remove_duplicates(list4);
+    puts("After");
+    print_list(list4);
 }
 
 void print_list(Node *head)
@@ -288,5 +296,96 @@ void replace_matches(Node *node, int find_value, int replace_value)
         }
 
         replace_matches(node->next, find_value, replace_value);
+    }
+}
+
+void sort_list(Node *head)
+{
+    if (head == NULL || head->next == NULL)
+        return;
+
+    bool swapped = false;
+    Node *end = NULL;
+
+    do
+    {
+        swapped = false;
+        Node *current = head;
+        Node *prev = NULL;
+
+        while (current->next != end)
+        {
+            if (current->value > current->next->value)
+            {
+                int temp;
+                temp = current->value;
+                current->value = current->next->value;
+                current->next->value = temp;
+                swapped = true;
+            }
+            current = current->next;
+        }
+        end = current;
+
+    } while (swapped);
+}
+
+void sort_list_inef(Node *head)
+{
+    if (head == NULL || head->next == NULL)
+        return;
+
+    bool swapped = false;
+
+    do
+    {
+        swapped = false;
+        Node *current = head;
+        Node *prev = NULL;
+        while (current->next != NULL)
+        {
+            prev = current;
+            current = current->next;
+            if (current != NULL)
+            {
+                if (current->value < prev->value)
+                {
+                    int temp;
+                    temp = prev->value;
+                    prev->value = current->value;
+                    current->value = temp;
+                    swapped = true;
+                }
+            }
+        }
+    } while (swapped);
+}
+
+void remove_duplicates(Node *head)
+{
+    if (head == NULL || head->next == NULL)
+        return;
+
+    Node *current1, *current2, *duplicate;
+    current1 = head;
+
+    while (current1 != NULL && current1->next != NULL)
+    {
+        current2 = current1;
+
+        while (current2->next != NULL)
+        {
+            if (current1->value == current2->next->value)
+            {
+                duplicate = current2->next;
+                current2->next = current2->next->next;
+                free(duplicate);
+            }
+            else
+            {
+                current2 = current2->next;
+            }
+        }
+        current1 = current1->next;
     }
 }
