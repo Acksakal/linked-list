@@ -1,3 +1,10 @@
+/**
+ * @file llist.c
+ * @author Acksakal
+ * @date Monday July 7th, 2025. 
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "llist.h"
@@ -447,6 +454,14 @@ Node *merge_sorted_lists(Node *list1, Node *list2)
     return new_head;
 }
 
+/**
+ * Merges two sorted lists (lowest to highest) into a single sorted list.
+ * 
+ * @param pointer to head of the first list
+ * @param pointer to head of the second list
+ * @return pointer to head of the merged list
+ * 
+ */
 Node *merge_sorted_lists_dummied(Node *list1, Node *list2) {
     Node dummy;
     Node *tail = &dummy;

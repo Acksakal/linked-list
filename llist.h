@@ -1,9 +1,22 @@
+/**
+ * Linked List Library
+ * 
+ * @file llist.h
+ * @author Acksakal
+ * @date Monday July 7th, 2025.
+ * 
+ */
+
 #include <stdbool.h>
 
+/**
+ * A node is a linked list
+ * 
+ */
 typedef struct node
 {
-    int value;
-    struct node *next;
+    int value; /**< the value stored in the node */
+    struct node *next; /**< pointer to the next node in the list */
 } Node;
 
 void print_list(Node *);
