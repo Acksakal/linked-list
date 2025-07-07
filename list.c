@@ -31,21 +31,27 @@ Node *insert_after(Node *, int, int);
 Node *delete_list(Node *node);
 void sum_lists(Node *node1, Node *node2);
 Node *duplicate_list(Node *);
-Node *merge_lists(Node *node1, Node *node2);
+Node *merge_sorted_lists(Node *node1, Node *node2);
+Node *merge_sorted_lists_dummied(Node *node1, Node *node2);
 
 int main()
 {
-    Node *list1 = NULL, *list2 = NULL;
-    list1 = insert_at_head(list1, 1);
-    list1 = insert_at_tail(list1, 10);
-    list1 = insert_at_head(list1, 21);
-    list1 = insert_at_tail(list1, 13);
-    list1 = insert_at_head(list1, 14);
-    list1 = insert_at_tail(list1, 61);
+    Node *list1 = NULL, *list2 = NULL, *list3 = NULL;
+    list1 = insert_at_tail(list1, 1);
+    list1 = insert_at_tail(list1, 2);
+    list1 = insert_at_tail(list1, 3);
+    list1 = insert_at_tail(list1, 8);
+    list2 = insert_at_tail(list2, 4);
+    list2 = insert_at_tail(list2, 5);
+    list2 = insert_at_tail(list2, 6);
+    list2 = insert_at_tail(list2, 18);
+    list2 = insert_at_tail(list2, 19);
     print_list(list1);
-    list2 = duplicate_list(list1);
     puts("");
     print_list(list2);
+    list3 = merge_sorted_lists_dummied(list1, list2);
+    puts("");
+    print_list(list3);
 
     return 0;
 }
@@ -429,7 +435,8 @@ Node *delete_list(Node *node)
 
 void sum_lists(Node *list1, Node *list2)
 {
-    if (list1 == NULL || list2 == NULL) return;
+    if (list1 == NULL || list2 == NULL)
+        return;
     list1->value += list2->value;
     sum_lists(list1->next, list2->next);
 }
@@ -441,19 +448,76 @@ Node *duplicate_list(Node *node)
 
     Node *new_node = calloc(1, sizeof(Node));
     new_node->value = node->value;
-    
+
     new_node->next = duplicate_list(node->next);
     return new_node;
 }
 
-Node *merge_lists(Node *node1, Node *node2)
+Node *merge_sorted_lists(Node *list1, Node *list2)
 {
-    if (node1 == NULL && node2 == NULL)
-        return NULL;
+    if (list1 == NULL)
+        return list2;
+    if (list2 == NULL)
+        return list1;
 
-    while (node1 != NULL && node2 != NULL)
+    Node *l1current, *l2current, *new_head, *new_head_current;
+    l1current = list1;
+    l2current = list2;
+
+    if (l1current->value <= l2current->value)
     {
-        if (node1->value < node2->value)
-            node1->next = node2;
+        new_head = l1current;
+        l1current = l1current->next;
     }
+    else
+    {
+        new_head = l2current;
+        l2current = l2current->next;
+    }
+
+    new_head_current = new_head;
+
+    while (l1current != NULL && l2current != NULL)
+    {
+
+        if (l1current->value <= l2current->value)
+        {
+            new_head_current->next = l1current;
+            new_head_current = new_head_current->next;
+            l1current = l1current->next;
+
+        }
+        else
+        {
+            new_head_current->next = l2current;
+            new_head_current = new_head_current->next;
+            l2current = l2current->next;
+        }
+    }
+
+    if (l1current == NULL) new_head_current->next = l2current;
+    else if (l2current == NULL) new_head_current->next = l1current;
+
+    return new_head;
 }
+
+Node *merge_sorted_lists_dummied(Node *list1, Node *list2) {
+    Node dummy;
+    Node *tail = &dummy;
+    dummy.next = NULL;
+
+    while (list1 != NULL && list2 != NULL) {
+        if (list1->value <= list2->value) {
+            tail->next = list1;
+            list1 = list1->next;
+        } else {
+            tail->next = list2;
+            list2 = list2->next;
+        }
+        tail = tail->next;
+    }
+
+    tail->next = (list1 != NULL) ? list1 : list2;
+    return dummy.next;
+}
+
