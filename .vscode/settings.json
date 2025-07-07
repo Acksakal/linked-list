@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "stdbool.h": "c",
+        "cstddef": "cpp",
+        "stdlib.h": "c",
+        "stdio.h": "c",
+        "time.h": "c"
     }
 }
